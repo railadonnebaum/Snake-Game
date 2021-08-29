@@ -9,7 +9,7 @@ Whenever the snake eats the food, it grows a little bit.
 
 If the snake head touches its body, game over.
 
-# Installaion:
+# Execution:
 How to compile and run the code:
 
 use jackComplier to compile the files
