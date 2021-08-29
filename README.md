@@ -14,7 +14,7 @@ How to compile and run the code:
 
 use jackComplier to compile the files
 
-use VMEmulator to run complied VM code In the menu. Choose the directory containing the vm files.
+use VMEmulator to run complied VM code. Choose the directory containing the vm files.
 
 Click yes in the confirmationg dialog In the toolbar, 
 choose No animation in the Animate dropdown .
