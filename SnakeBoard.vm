@@ -1,0 +1,528 @@
+function SnakeBoard.new 0
+push constant 10
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+push constant 4
+call Math.divide 2
+pop this 1
+push argument 2
+push constant 16
+sub
+push constant 4
+call Math.divide 2
+pop this 2
+push argument 1
+push constant 16
+call Math.divide 2
+pop this 3
+push argument 2
+push constant 16
+sub
+push constant 16
+call Math.divide 2
+pop this 4
+push pointer 0
+call SnakeBoard.initBoard 1
+pop temp 0
+push pointer 0
+return
+function SnakeBoard.dispose 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push this 1
+lt
+not
+if-goto WHILE_END0
+push local 0
+push this 9
+add
+pop pointer 1
+push that 0
+pop local 1
+push local 1
+call Array.dispose 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function SnakeBoard.placeFood 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+not
+not
+if-goto WHILE_END0
+push this 1
+call Random.randRange 1
+pop local 1
+push this 2
+push constant 4
+sub
+call Random.randRange 1
+pop local 2
+push pointer 0
+push local 1
+push local 2
+call SnakeBoard.checkOccupied 3
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop local 0
+label IF_FALSE0
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+pop this 5
+push local 2
+pop this 6
+push constant 0
+return
+function SnakeBoard.placeSpecialFood 3
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+not
+not
+if-goto WHILE_END0
+push this 1
+call Random.randRange 1
+pop local 1
+push this 2
+push constant 4
+sub
+call Random.randRange 1
+pop local 2
+push pointer 0
+push local 1
+push local 2
+call SnakeBoard.checkOccupied 3
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop local 0
+label IF_FALSE0
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+pop this 7
+push local 2
+pop this 8
+push constant 0
+return
+function SnakeBoard.drawFood 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 5
+push constant 4
+call Math.multiply 2
+push constant 2
+add
+push this 6
+push constant 4
+call Math.multiply 2
+push constant 2
+add
+push constant 2
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+return
+function SnakeBoard.drawSpecialFood 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 7
+push constant 4
+call Math.multiply 2
+push constant 2
+add
+push this 8
+push constant 4
+call Math.multiply 2
+push constant 2
+add
+push constant 4
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+return
+function SnakeBoard.removeSpecialFood 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 7
+push constant 4
+call Math.multiply 2
+push constant 2
+add
+push this 8
+push constant 4
+call Math.multiply 2
+push constant 2
+add
+push constant 4
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+return
+function SnakeBoard.initBoard 3
+push argument 0
+pop pointer 0
+push this 1
+call Array.new 1
+pop this 9
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push this 1
+lt
+not
+if-goto WHILE_END0
+push this 2
+call Array.new 1
+pop local 2
+push constant 0
+pop local 1
+label WHILE_EXP1
+push local 1
+push this 2
+lt
+not
+if-goto WHILE_END1
+push local 1
+push local 2
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push this 9
+add
+push local 2
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function SnakeBoard.sizeX 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function SnakeBoard.sizeY 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function SnakeBoard.foodX 0
+push argument 0
+pop pointer 0
+push this 5
+return
+function SnakeBoard.foodY 0
+push argument 0
+pop pointer 0
+push this 6
+return
+function SnakeBoard.setOccupied 1
+push argument 0
+pop pointer 0
+push argument 1
+push this 9
+add
+pop pointer 1
+push that 0
+pop local 0
+push argument 2
+push local 0
+add
+push argument 3
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function SnakeBoard.checkOccupied 1
+push argument 0
+pop pointer 0
+push argument 1
+push this 9
+add
+pop pointer 1
+push that 0
+pop local 0
+push argument 2
+push local 0
+add
+pop pointer 1
+push that 0
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+return
+goto IF_END0
+label IF_FALSE0
+push constant 0
+return
+label IF_END0
+function SnakeBoard.checkFood 0
+push argument 0
+pop pointer 0
+push argument 1
+push this 5
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 2
+push this 6
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+not
+return
+label IF_FALSE1
+label IF_FALSE0
+push constant 0
+return
+function SnakeBoard.checkSpecialFood 0
+push argument 0
+pop pointer 0
+push argument 1
+push this 7
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 2
+push this 8
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+not
+return
+label IF_FALSE1
+label IF_FALSE0
+push constant 0
+return
+function SnakeBoard.drawSnakeBit 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push argument 1
+push constant 4
+call Math.multiply 2
+push argument 2
+push constant 4
+call Math.multiply 2
+push argument 1
+push constant 4
+call Math.multiply 2
+push constant 4
+add
+push argument 2
+push constant 4
+call Math.multiply 2
+push constant 4
+add
+call Screen.drawRectangle 4
+pop temp 0
+push pointer 0
+push argument 1
+push argument 2
+push constant 0
+not
+call SnakeBoard.setOccupied 4
+pop temp 0
+push constant 0
+return
+function SnakeBoard.clearSnakeBit 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push argument 1
+push constant 4
+call Math.multiply 2
+push argument 2
+push constant 4
+call Math.multiply 2
+push argument 1
+push constant 4
+call Math.multiply 2
+push constant 4
+add
+push argument 2
+push constant 4
+call Math.multiply 2
+push constant 4
+add
+call Screen.drawRectangle 4
+pop temp 0
+push pointer 0
+push argument 1
+push argument 2
+push constant 0
+call SnakeBoard.setOccupied 4
+pop temp 0
+push constant 0
+return
+function SnakeBoard.drawStatus 2
+push argument 0
+pop pointer 0
+push constant 0
+push constant 5
+call Output.moveCursor 2
+pop temp 0
+push constant 7
+call String.new 1
+push constant 83
+call String.appendChar 2
+push constant 99
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 58
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+pop local 1
+push local 1
+call Output.printString 1
+pop temp 0
+push local 1
+call String.dispose 1
+pop temp 0
+push this 0
+call SnakeGame.getScore 1
+call Output.printInt 1
+pop temp 0
+push constant 0
+return
+function SnakeBoard.drawCrashed 1
+push argument 0
+pop pointer 0
+push constant 0
+push constant 20
+call Output.moveCursor 2
+pop temp 0
+push constant 21
+call String.new 1
+push constant 79
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 80
+call String.appendChar 2
+push constant 83
+call String.appendChar 2
+push constant 46
+call String.appendChar 2
+push constant 46
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 89
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 85
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 67
+call String.appendChar 2
+push constant 82
+call String.appendChar 2
+push constant 65
+call String.appendChar 2
+push constant 83
+call String.appendChar 2
+push constant 72
+call String.appendChar 2
+push constant 69
+call String.appendChar 2
+push constant 68
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+push constant 33
+call String.appendChar 2
+pop local 0
+push local 0
+call Output.printString 1
+pop temp 0
+push local 0
+call String.dispose 1
+pop temp 0
+push constant 0
+return

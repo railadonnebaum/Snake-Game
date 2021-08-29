@@ -1,0 +1,149 @@
+class SnakeGame {
+    field Snake snake;
+    field SnakeBoard board;
+    field int score;
+    field int cycle;
+    field int speed;
+    constructor SnakeGame new() {
+        var int tmpspeed;
+        let tmpspeed = Keyboard.readInt("enter speed between 1 - 10: ");
+        do Screen.clearScreen();
+        let score = 0;
+        let cycle = 0;
+        let speed = 100 - ((tmpspeed-1)*10);
+        let board = SnakeBoard.new(this, 512, 264);
+        let snake = Snake.new(this, board.sizeX() / 2, board.sizeY() / 2, 15, 3);
+        do board.placeFood();
+        do board.placeSpecialFood();
+        do board.drawStatus();
+        return this;
+    }
+
+    method void dispose() {
+        do snake.dispose();
+        do board.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void run() {
+        var boolean broken;
+        var boolean exit;
+        var int key;
+        var int temp;
+        let exit = false;
+        while(~exit) {
+            do snake.rememberDir();
+            do board.drawStatus();
+            let key = Keyboard.keyPressed();
+            if( key = 130 ) {
+                // left arrow, valid only if we were going up or down
+                if( snake.getLastDir() = 1 ) {
+                    do snake.setDir(3);
+                }
+                if( snake.getLastDir() = 2 ) {
+                    do snake.setDir(3);
+                }
+            }
+            if( key = 131 ) {
+                // up arrow, valid only if we were going left or right
+                if( snake.getLastDir() = 3 ) {
+                    do snake.setDir(1);
+                }
+                if( snake.getLastDir() = 4 ) {
+                    do snake.setDir(1);
+                }
+            }
+            if( key = 132 ) {
+                // right arrow, valid only if we were going up or down
+                if( snake.getLastDir() = 1 ) {
+                    do snake.setDir(4);
+                }
+                if( snake.getLastDir() = 2 ) {
+                    do snake.setDir(4);
+                }
+            }
+            if( key = 133 ) {
+                // down arrow, valid only if we were going left or right
+                if( snake.getLastDir() = 3 ) {
+                    do snake.setDir(2);
+                }
+                if( snake.getLastDir() = 4 ) {
+                    do snake.setDir(2);
+                }
+            }
+
+            // try to move in a current direction
+            if( ~ snake.tryMove() ) {
+                do board.drawCrashed();
+                do Sys.halt();
+            }
+
+            // check if eaten the food pellet?
+            if( board.checkFood(snake.posX(), snake.posY()) ) {
+                do snake.eatFood();
+                do nextLevel(1);
+                do board.placeFood();
+            }
+            
+            // check if eaten the specail food pellet?
+            if( board.checkSpecialFood(snake.posX(), snake.posY()) ) {
+                do snake.eatFood();
+                do board.removeSpecialFood();
+                do nextLevel(5);
+                do board.placeSpecialFood();
+            }
+
+            do snake.grow(cycle);
+            do board.drawFood();
+            
+            //draws the special food, only when the score divides in 4
+            let temp = (score  - ((score/4)*4));
+            if(temp = 0 ){
+                do board.drawSpecialFood();
+            }
+            else{
+                do board.removeSpecialFood();
+            }
+
+            do board.drawStatus();
+            do Sys.wait(speed);
+            do nextCycle();
+            if( snake.checkRewriteHistory() ) {
+                let cycle = snake.getLength();
+            }
+        }
+        do Sys.halt();
+        return;
+    }
+
+
+    method void nextLevel(int newScore) {
+
+        let score = score + newScore;
+        if(newScore = 1 ){
+            if( speed > 30 ) {
+            let speed = speed - 5;
+            }
+        }
+        return;
+    }
+
+    method int nextCycle() {
+        let cycle = cycle + 1;
+        return cycle;
+    }
+
+    method SnakeBoard getBoard() {
+        return board;
+    }
+    method Snake getSnake() {
+        return snake;
+    }
+    method int getCycle() {
+        return cycle;
+    }
+    method int getScore() {
+        return score;
+    }
+}

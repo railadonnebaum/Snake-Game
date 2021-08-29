@@ -1,0 +1,181 @@
+class SnakeBoard {
+    field SnakeGame game;
+    field int sizeX, sizeY;
+    field int specialSizeX, specialSizeY;
+    field int foodX, foodY;
+    field int specialFoodX, specialFoodY;
+    field Array board;
+    constructor SnakeBoard new(SnakeGame Agame, int Ax, int Ay) {
+        let game = Agame;
+        let sizeX = Ax / 4;
+        let sizeY = (Ay-16) / 4;
+        let specialSizeX = Ax / 16;
+        let specialSizeY = (Ay-16) / 16;
+        do initBoard();
+        return this;
+    }
+    method void dispose() {
+        var int curX;
+        var Array xBoard;
+        let curX = 0;
+        while( curX < sizeX ) {
+            let xBoard = board[curX];
+            do xBoard.dispose();
+            let curX = curX + 1;
+        }
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void placeFood() {
+        var boolean found;
+        var int randX, randY;
+        // don't place the food on top of a snake piece
+        let found = false;
+        while( ~found ) {
+            let randX = Random.randRange(sizeX);
+            let randY = Random.randRange(sizeY-4);
+            if( ~ checkOccupied(randX, randY) ) {
+                let found = true;
+            }
+        }
+        let foodX = randX;
+        let foodY = randY;
+        return;
+    }
+
+    method void placeSpecialFood() {
+        var boolean found;
+        var int randX, randY;
+        // don't place the food on top of a snake piece
+        let found = false;
+        while( ~found ) {
+            let randX = Random.randRange(sizeX);
+            let randY = Random.randRange(sizeY-4);
+            if( ~ checkOccupied(randX, randY) ) {
+                let found = true;
+            }
+        }
+        let specialFoodX = randX;
+        let specialFoodY = randY;
+        return;
+    }
+
+    method void drawFood() {
+        do Screen.setColor(true);
+        do Screen.drawCircle((foodX*4)+2, (foodY*4)+2, 2);
+        return;
+    }
+
+    method void drawSpecialFood() {
+        do Screen.setColor(true);
+        do Screen.drawCircle((specialFoodX*4)+2, (specialFoodY*4)+2, 4);
+        return;
+    }
+
+    method void removeSpecialFood(){
+        do Screen.setColor(false);
+        do Screen.drawCircle((specialFoodX*4)+2, (specialFoodY*4)+2, 4);
+        return;
+    }
+   
+    method void initBoard() {
+        var int curX, curY;
+        var Array xBoard;
+
+        let board = Array.new(sizeX);
+        let curX = 0;
+
+        while( curX < sizeX ) {
+            let xBoard = Array.new(sizeY);
+            let curY = 0;
+            while( curY < sizeY ) {
+                let xBoard[curY] = false;
+                let curY = curY + 1;
+            }
+            let board[curX] = xBoard;
+            let curX = curX + 1;
+        }
+        return;
+    }
+
+    method int sizeX() {
+        return sizeX;
+    }
+    method int sizeY() {
+        return sizeY;
+    }
+    method int foodX() {
+        return foodX;
+    }
+    method int foodY() {
+        return foodY;
+    }
+
+    method void setOccupied(int x, int y, boolean occupied) {
+        var Array xBoard;
+        let xBoard = board[x];
+        let xBoard[y] = occupied;
+        return;
+    }
+    method boolean checkOccupied(int x, int y) {
+        var Array xBoard;
+        let xBoard = board[x];
+        if( xBoard[y] ) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    method boolean checkFood(int x, int y) {
+        if( x = foodX ) {
+            if( y = foodY ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    method boolean checkSpecialFood(int x, int y) {
+        if( x = specialFoodX ) {
+            if( y = specialFoodY ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    method void drawSnakeBit(int x, int y) {
+        do Screen.setColor(true);
+        do Screen.drawRectangle( x*4, y*4, (x*4)+4, (y*4)+4 );
+        do setOccupied(x, y, true);
+        return;
+    }
+    method void clearSnakeBit(int x, int y) {
+        do Screen.setColor(false);
+        do Screen.drawRectangle( x*4, y*4, (x*4)+4, (y*4)+4 );
+        do setOccupied(x, y, false);
+        return;
+    }
+
+    method void drawStatus() {
+
+        var Snake snake;
+        var String tString;
+        do Output.moveCursor(0, 5);
+        let tString = "Score: ";
+        do Output.printString(tString);
+        do tString.dispose();
+        do Output.printInt(game.getScore());
+        return;
+    }
+  
+    method void drawCrashed() {
+        var String tString;
+        do Output.moveCursor(0, 20);
+        let tString = "OOPS.. YOU CRASHED!!!";
+        do Output.printString(tString);
+        do tString.dispose();
+        return;
+    }
+}

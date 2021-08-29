@@ -1,0 +1,185 @@
+class Snake {
+    field SnakeGame game;
+    field int posX, posY;
+    field int length;
+    field int growby;
+    field int togrow;
+    // the direction the snake is/was moving
+    // 0=none,1=up,2=down,3=left,4=right
+    field int dir, lastdir;
+    // the history of the snake's movements
+    field Array histX, histY;
+    field int histSize;
+    // creates a new Snake
+    // args are X/Y position of head, length and how much to grow by
+    constructor Snake new(SnakeGame Agame, int Ax, int Ay, int Alen, int Agrowby) {
+        var int i;
+        let game = Agame;
+        let posX = Ax - Alen;
+        let posY = Ay;
+        let length = Alen;
+        let growby = Agrowby;
+
+        let togrow = 0;
+        let dir = 4;
+        let lastdir = 4;
+        let histSize = 512;
+        let histX = Array.new(histSize);
+        let histY = Array.new(histSize);
+
+        let i = 0;
+        while( i < length ) {
+            let posX = posX + 1;
+            do drawHead(game.getCycle());
+            let i = i + 1;
+            do game.nextCycle();
+        }
+        return this;
+    }
+
+    method void dispose() {
+        do histX.dispose();
+        do histY.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    
+    method boolean checkRewriteHistory() {
+        if( game.getCycle() = histSize ) {
+            do rewriteHistory();
+            return true;
+        }
+        return false;
+    }
+
+   
+    method void rewriteHistory() {
+        var int i, src, dst;
+        let i = length;
+        let dst = 0;
+        let src = histSize - length;
+        while( i > 0 ) {
+            let histX[dst] = histX[src];
+            let histY[dst] = histY[src];
+            let src = src + 1;
+            let dst = dst + 1;
+            let i = i - 1;
+        }
+        return;
+    }
+
+    method int posX() {
+        return posX;
+    }
+    method int posY() {
+        return posY;
+    }
+    method int getLength() {
+        return length;
+    }
+    method int getDir() {
+        return dir;
+    }
+
+    method int getLastDir() {
+        return lastdir;
+    }
+
+    method void setDir(int newdir) {
+        let dir = newdir;
+        return;
+    }
+
+    method void rememberDir() {
+        let lastdir = dir;
+        return;
+    }
+
+    // checks if we can move one more space in the
+    // current direction
+    method boolean tryMove() {
+        var SnakeBoard board;
+        let board = game.getBoard();
+        if( dir = 1 ) {
+            // up
+            if( posY = 0 ) {
+                let posY = board.sizeY();
+            }
+            else {
+                let posY = posY - 1;
+            }
+        }
+        if( dir = 2 ) {
+            // down
+            if( posY = board.sizeY() ) {
+                let posY = 0;
+            }
+            else {
+                let posY = posY + 1;
+            }
+        }
+        if( dir = 3 ) {
+            // left
+            if( posX = 0 ) {
+                let posX = board.sizeX() -4;
+            }
+            else {
+                let posX = posX - 1;
+            }
+        }
+        if( dir = 4 ) {
+            // right
+            if( posX = (board.sizeX() - 2) ) {
+                let posX = 0;
+            }
+            else {
+                let posX = posX + 1;
+            }
+        }
+
+        // check if the snake has hit itself
+        if( board.checkOccupied(posX, posY) ) {
+            return false;
+        }
+        return true;
+    }
+
+    method void grow(int cycle) {
+        do drawHead(cycle);
+        if( togrow > 0 ) {
+            let togrow = togrow - 1;
+            let length = length + 1;
+        }
+        else {
+            do clearTail(cycle);
+        }
+        return;
+    }
+
+    method void drawHead(int cycle) {
+        var SnakeBoard board;
+        let board = game.getBoard();
+        do board.drawSnakeBit(posX, posY);
+        let histX[cycle] = posX;
+        let histY[cycle] = posY;
+        return;
+    }
+
+    method void clearTail(int cycle) {
+        var SnakeBoard board;
+        var int tailIndex, tailX, tailY;
+        let tailIndex = cycle - length;
+        let tailX = histX[tailIndex];
+        let tailY = histY[tailIndex];
+        let board = game.getBoard();
+        do board.clearSnakeBit(tailX, tailY);
+        return;
+    }
+
+    method void eatFood() {
+        let togrow = togrow + growby;
+        return;
+    }
+
+}
