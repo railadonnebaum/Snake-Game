@@ -14,14 +14,12 @@ How to compile and run the code:
 
 use jackComplier to compile the files
 
-use VMEmulator to run complied VM code In the menu, 
-
-go to File > Load Program and choose the directory JumperMan. 
+use VMEmulator to run complied VM code In the menu. Choose the directory containing the vm files.
 
 Click yes in the confirmationg dialog In the toolbar, 
+choose No animation in the Animate dropdown .
 
-choose No animation in the Animate dropdown In the toolbar,
-
+In the toolbar,
 click the double right arrows (3rd icon) 
 
 Enjoy!
